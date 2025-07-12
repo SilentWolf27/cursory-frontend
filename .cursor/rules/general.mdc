@@ -1,0 +1,249 @@
+---
+alwaysApply: true
+---
+
+# Frontend Development Rules for Cursory
+
+## Project Context
+
+Cursory is a personal web application for organizing technical knowledge into structured courses and learning roadmaps. This frontend React application provides the user interface for managing and consuming technical content in areas like robotics, MATLAB, embedded systems, programming, and AI.
+
+## Architecture Rules
+
+### Domain-Driven Structure
+- Organize code by business domains, not technical layers
+- Each domain (`auth`, `courses`, `modules`, `resources`) should be self-contained
+- Shared utilities go in `/shared` directory
+
+### Component Architecture
+```
+/src
+  /auth
+    /components       # Auth-specific components
+    /hooks           # Auth custom hooks
+    /services        # Auth API calls
+    /types           # Auth TypeScript types
+    /pages           # Auth page components
+  /courses
+    /components       # Course-specific components
+    /hooks           # Course custom hooks
+    /services        # Course API calls
+    /types           # Course TypeScript types
+    /pages           # Course page components
+  /shared
+    /components       # Reusable UI components
+    /hooks           # Shared custom hooks
+    /utils           # Utility functions
+    /types           # Shared TypeScript types
+```
+
+## Code Style Rules
+
+### TypeScript
+- **Always use TypeScript** - No JavaScript files allowed
+- **Strict mode enabled** - Use strict TypeScript configuration
+- **Explicit types** - Avoid `any`, prefer explicit typing
+- **Interface over type** - Use interfaces for object shapes
+- **Enum for constants** - Use enums for related constants
+
+### Naming Conventions
+- **Components**: PascalCase (`CourseCard`, `AuthForm`)
+- **Files**: kebab-case (`course-card.tsx`, `auth-form.tsx`)
+- **Folders**: kebab-case (`user-profile`, `course-management`)
+- **Functions**: camelCase (`getUserCourses`, `handleSubmit`)
+- **Variables**: camelCase (`courseData`, `isLoading`)
+- **Constants**: UPPER_SNAKE_CASE (`API_BASE_URL`, `MAX_TITLE_LENGTH`)
+- **Custom hooks**: camelCase with `use` prefix (`useCourses`, `useAuth`)
+
+### File Organization
+- **One component per file** - Each component gets its own file
+- **Index files only when needed** - No barrel unless explicitly requested
+- **Co-location** - Keep related files close together
+- **Consistent imports order**:
+  1. React and React-related imports
+  2. External libraries
+  3. Internal imports (absolute paths)
+  4. Relative imports
+
+### Component Rules
+
+#### Functional Components Only
+- Use functional components with hooks
+- No class components
+- Prefer function declarations over arrow functions for components
+- React 19 is used for this project
+- We dont explicitly import React from 'react'
+
+#### Component Structure
+```tsx
+// 1. Imports
+import { SomeType } from './types';
+
+// 2. Types/Interfaces
+interface Props {
+  title: string;
+  onSubmit: (data: SomeType) => void;
+}
+
+// 3. Component
+export function ComponentName({ title, onSubmit }: Props) {
+  // 4. Hooks (in order: state, effects, custom hooks)
+  const [data, setData] = useState<SomeType | null>(null);
+  
+  useEffect(() => {
+    // effect logic
+  }, []);
+  
+  const { courses, loading } = useCourses();
+  
+  // 5. Event handlers
+  const handleClick = () => {
+    // handler logic
+  };
+  
+  // 6. Early returns
+  if (loading) return <div>Loading...</div>;
+  
+  // 7. Main render
+  return (
+    <div>
+      {/* JSX */}
+    </div>
+  );
+}
+```
+
+#### Props and State
+- **Destructure props** in function parameters
+- **Use TypeScript interfaces** for prop types
+- **Prefer controlled components** over uncontrolled
+- **Use custom hooks** for complex state logic
+
+### Styling Rules
+
+#### Tailwind CSS
+- **Tailwind-first approach** - Use Tailwind classes primarily
+- **Custom CSS only when necessary** - For complex animations or unique styles
+- **Responsive design** - Mobile-first approach with responsive classes
+- **Consistent spacing** - Use Tailwind's spacing scale
+- **Flex and grid** - Use flex and grid for layout never use space-x and space-y
+
+#### Component Styling
+- **No inline styles** - Use Tailwind classes or CSS modules
+- **Conditional classes** - Use `clsx` or similar for conditional styling
+- **Consistent design tokens** - Use Tailwind's design system
+
+### State Management Rules
+
+#### Local State
+- **useState for simple state** - Single values, toggles, form inputs
+- **useReducer for complex state** - Multiple related state values
+- **Custom hooks for business logic** - Extract complex state logic
+
+#### Global State
+- **React Context for auth** - User authentication state
+- **No prop drilling** - Use context for deep props
+
+### API Integration Rules
+
+#### HTTP Client
+- **Axios with interceptors** - For request/response handling
+- **Centralized API client** - Single configuration point
+- **Error handling** - Consistent error handling across all requests
+- **Loading states** - Always handle loading states
+
+#### API Services
+```tsx
+// services/course-service.ts
+export const courseService = {
+  async getCourses(): Promise<Course[]> {
+    const response = await apiClient.get('/courses');
+    return response.data;
+  },
+  
+  async createCourse(data: CreateCourseData): Promise<Course> {
+    const response = await apiClient.post('/courses', data);
+    return response.data;
+  }
+};
+```
+
+### Error Handling Rules
+
+#### Error Boundaries
+- **Global error boundary** - Catch unhandled errors
+- **Feature-specific boundaries** - For isolated error handling
+- **Fallback UI** - Always provide fallback components
+
+#### Error States
+- **Explicit error handling** - Handle errors in components
+- **User-friendly messages** - Convert technical errors to user messages
+- **Retry mechanisms** - Provide retry options where appropriate
+
+### Performance Rules
+
+#### Optimization
+- **React.memo for expensive components** - Prevent unnecessary re-renders
+- **useMemo for expensive calculations** - Cache expensive computations
+- **useCallback for stable references** - Prevent unnecessary re-renders
+- **Lazy loading** - Use React.lazy for route-based code splitting
+
+#### Bundle Size
+- **Tree shaking** - Import only what you need
+- **Dynamic imports** - For large libraries or features
+- **Image optimization** - Optimize images and use appropriate formats
+
+### Accessibility Rules
+
+#### WCAG Compliance
+- **Semantic HTML** - Use proper HTML elements
+- **ARIA attributes** - Add ARIA labels where needed
+- **Keyboard navigation** - Ensure all interactive elements are keyboard accessible
+- **Color contrast** - Maintain proper contrast ratios
+
+### Security Rules
+
+#### Authentication
+- **HTTP-only cookies** - Store JWT tokens in HTTP-only cookies
+- **No sensitive data in localStorage** - Avoid storing sensitive data client-side
+- **Input validation** - Validate all user inputs
+
+#### Data Handling
+- **Validate API responses** - Don't trust API responses blindly
+- **Secure routes** - Protect authenticated routes properly
+
+### Development Workflow Rules
+
+#### Code Quality
+- **ESLint and Prettier** - Enforce code style and quality
+- **TypeScript strict mode** - Enable strict TypeScript checking
+- **Pre-commit hooks** - Run linting and tests before commits
+
+### Documentation Rules
+
+#### Code Documentation
+- **JSDoc comments** - Document complex functions and components
+- **README updates** - Keep README current with changes
+- **Type documentation** - Document complex types and interfaces
+
+#### Comments
+- **Explain why, not what** - Focus on business logic and decisions
+- **Update comments** - Keep comments in sync with code changes
+- **Remove dead code** - Don't leave commented-out code
+- **TODO comments** - Use TODO comments for future improvements
+
+## UI/UX Guidelines
+
+### Design Principles
+- **Consistency** - Maintain consistent design patterns
+- **Simplicity** - Keep interfaces clean and uncluttered
+- **Accessibility** - Design for all users and abilities
+- **Performance** - Optimize for fast loading and smooth interactions
+- **Mobile-first** - Design for mobile devices first
+
+### Component Design
+- **Reusable components** - Create flexible, reusable UI components
+- **Compound components** - Use compound component patterns for complex UI
+- **Consistent spacing** - Use consistent spacing throughout the app
+- **Loading states** - Always show loading states for async operations
+- **Empty states** - Provide meaningful empty states
