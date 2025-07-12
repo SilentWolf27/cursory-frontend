@@ -1,17 +1,14 @@
-import React from 'react';
+import { Routes, Route } from 'react-router';
 
-function App(): React.JSX.Element {
+function App() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-gray-900">
-          Cursory - Technical Knowledge Management
-        </h1>
-        <p className="mt-4 text-gray-600">
-          Ready to build your learning roadmaps.
-        </p>
-      </div>
-    </div>
+    <Routes>
+      <Route path="/" element={<div>Home Page</div>} />
+      <Route path="/login" element={<div>Login Page</div>} />
+      <Route path="/register" element={<div>Register Page</div>} />
+      <Route path="/dashboard" element={<div>Dashboard Page</div>} />
+      <Route path="/courses" element={<div>Courses Page</div>} />
+    </Routes>
   );
 }
 
