@@ -5,6 +5,22 @@ export interface LoginCredentials {
   password: string;
 }
 
-export interface AuthResponse {
+export interface LoginResponse {
   user: User;
+}
+
+export interface SessionResponse {
+  user: User;
+  session: {
+    isAuthenticated: boolean;
+    lastActivity: string;
+  };
+}
+
+export interface LogoutResponse {
+  message: string;
+}
+
+export interface RefreshResponse {
+  message: string;
 }

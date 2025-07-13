@@ -89,21 +89,21 @@ interface Props {
 export function ComponentName({ title, onSubmit }: Props) {
   // 4. Hooks (in order: state, effects, custom hooks)
   const [data, setData] = useState<SomeType | null>(null);
-  
+
   useEffect(() => {
     // effect logic
   }, []);
-  
+
   const { courses, loading } = useCourses();
-  
+
   // 5. Event handlers
   const handleClick = () => {
     // handler logic
   };
-  
+
   // 6. Early returns
   if (loading) return <div>Loading...</div>;
-  
+
   // 7. Main render
   return (
     <div>
@@ -144,6 +144,21 @@ export function ComponentName({ title, onSubmit }: Props) {
 - **React Context for auth** - User authentication state
 - **No prop drilling** - Use context for deep props
 
+### Form Validation Rules
+
+#### React Hook Form with Zod
+- **React Hook Form for form management** - Use for all forms with validation
+- **Zod for schema validation** - Type-safe validation schemas
+- **@hookform/resolvers** - For Zod integration with React Hook Form
+- **Centralized validation schemas** - Define schemas in dedicated files
+
+#### Form Validation Best Practices
+- **Schema co-location** - Keep schemas near their usage
+- **Reusable validation rules** - Extract common validation patterns
+- **Error message consistency** - Use consistent error message formats
+- **Client-side validation** - Always validate on client before API calls
+- **Server validation integration** - Handle server validation errors gracefully
+
 ### API Integration Rules
 
 #### HTTP Client
@@ -160,7 +175,7 @@ export const courseService = {
     const response = await apiClient.get('/courses');
     return response.data;
   },
-  
+
   async createCourse(data: CreateCourseData): Promise<Course> {
     const response = await apiClient.post('/courses', data);
     return response.data;
