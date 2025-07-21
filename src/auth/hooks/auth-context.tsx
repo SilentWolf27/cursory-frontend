@@ -1,4 +1,10 @@
-import { createContext, useState, useEffect, type ReactNode } from 'react';
+import {
+  createContext,
+  useState,
+  useEffect,
+  useCallback,
+  type ReactNode,
+} from 'react';
 import { authService } from '../services/auth-service';
 import type { User } from '../types/user';
 import type { LoginCredentials } from '../types/auth';
@@ -15,6 +21,7 @@ interface AuthContextValue extends AuthState {
   logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
   clearError: () => void;
+  clearSession: () => void;
 }
 
 const initialState: AuthState = {
@@ -113,9 +120,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
+  const handleSessionExpired = useCallback(() => {
+    clearAuthentication();
+  }, []);
+
   useEffect(() => {
     checkAuth();
-  }, []);
+
+    window.addEventListener('auth:session-expired', handleSessionExpired);
+
+    return () => {
+      window.removeEventListener('auth:session-expired', handleSessionExpired);
+    };
+  }, [handleSessionExpired]);
 
   const contextValue: AuthContextValue = {
     ...state,
@@ -123,6 +140,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     logout,
     checkAuth,
     clearError,
+    clearSession: clearAuthentication,
   };
 
   return (

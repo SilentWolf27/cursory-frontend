@@ -237,8 +237,63 @@ export const courseService = {
 
 ### Documentation Rules
 
+#### JSDoc Comments
+
+##### When to Use JSDoc
+
+Use JSDoc comments for functions that involve:
+
+- **Complex business logic** - Authentication flows, permission validation, data transformations
+- **Important side effects** - Data deletion, state changes, external API calls  
+- **Domain-specific errors** - Business rule violations, ownership validation, conflicts
+- **Special behaviors** - Automatic reordering, slug uniqueness, URL validation
+
+##### When NOT to Use JSDoc
+
+Avoid JSDoc comments that:
+
+- **Repeat the function name** - `getAllCourses()` doesn't need "Get all courses"
+- **State the obvious** - Simple CRUD operations with clear names
+- **Add no business context** - Generic descriptions without domain knowledge
+
+##### JSDoc Structure
+
+When writing JSDoc, include:
+
+1. **Business behavior description** - What this does in domain terms
+2. **Parameters** - What each parameter represents in business context
+3. **Returns** - What the resolved value contains
+4. **Throws** - Specific business errors that can occur
+
+##### JSDoc Examples
+
+**✅ Good JSDoc (adds business value):**
+
+```ts
+/**
+ * Creates a new course with unique slug and associates it to the authenticated user
+ * @param data - Course data to create (title, description, slug, visibility, tags)
+ * @returns Promise that resolves with the created course
+ * @throws Error if slug already exists or data is invalid
+ */
+async createCourse(data: CreateCourseData): Promise<CourseResponse>
+```
+
+**❌ Bad JSDoc (redundant):**
+
+```ts
+/**
+ * Get all courses
+ */
+async getAllCourses(): Promise<CoursesResponse>
+```
+
+##### Language
+- **Use English** for all JSDoc comments and descriptions
+- **Be concise but specific** - focus on domain knowledge, not implementation details
+- **Maintain consistency** with the codebase language (English)
+
 #### Code Documentation
-- **JSDoc comments** - Document complex functions and components
 - **README updates** - Keep README current with changes
 - **Type documentation** - Document complex types and interfaces
 

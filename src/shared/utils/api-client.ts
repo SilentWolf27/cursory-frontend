@@ -11,22 +11,37 @@ const apiClient: AxiosInstance = axios.create({
   },
 });
 
+let isRefreshing = false;
+
 apiClient.interceptors.response.use(
-  (response: AxiosResponse) => {
-    return response;
-  },
+  (response: AxiosResponse) => response,
   async error => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // Don't retry refresh endpoint to prevent cycles
+    if (originalRequest.url?.includes('/auth/refresh')) {
+      isRefreshing = false;
+      return Promise.reject(error);
+    }
+
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      !isRefreshing
+    ) {
       originalRequest._retry = true;
+      isRefreshing = true;
 
       try {
         await apiClient.post('/auth/refresh');
-
+        isRefreshing = false;
         return apiClient(originalRequest);
       } catch (refreshError) {
-        window.location.href = '/login';
+        isRefreshing = false;
+
+        // Dispatch custom event for AuthContext to handle
+        window.dispatchEvent(new CustomEvent('auth:session-expired'));
+
         return Promise.reject(refreshError);
       }
     }
