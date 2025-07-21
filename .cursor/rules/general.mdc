@@ -116,6 +116,7 @@ export function ComponentName({ title, onSubmit }: Props) {
 #### Props and State
 - **Destructure props** in function parameters
 - **Use TypeScript interfaces** for prop types
+- **Props interface naming** - Always name component prop interfaces as `Props` (not `ComponentNameProps`)
 - **Prefer controlled components** over uncontrolled
 - **Use custom hooks** for complex state logic
 

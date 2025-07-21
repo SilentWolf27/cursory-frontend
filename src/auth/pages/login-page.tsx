@@ -1,4 +1,17 @@
+import { useLocation, useNavigate } from 'react-router';
+import { LoginForm } from '../components/login-form';
+
+const DEFAULT_AUTHENTICATED_ROUTE = '/';
+
 export default function LoginPage() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleLoginSuccess = () => {
+    const from = location.state?.from || DEFAULT_AUTHENTICATED_ROUTE;
+    navigate(from, { replace: true });
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full bg-white rounded-xl shadow-xl border border-gray-100 p-6 sm:p-8">
@@ -11,11 +24,7 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <div className="flex flex-col gap-4 sm:gap-6">
-          <div className="text-center text-gray-500 text-sm sm:text-base">
-            Login form coming soon...
-          </div>
-        </div>
+        <LoginForm onSuccess={handleLoginSuccess} />
       </div>
     </div>
   );
