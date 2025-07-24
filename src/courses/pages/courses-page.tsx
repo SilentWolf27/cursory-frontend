@@ -30,7 +30,7 @@ function CoursesPage() {
         title="Ready to organize your knowledge?"
         description="Create your first course to start building your personal learning library. Structure your expertise into clear, shareable modules."
         actionText="Start organizing"
-        onAction={() => {}}
+        actionHref="/cursos/crear"
       />
     );
   }

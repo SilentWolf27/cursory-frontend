@@ -12,7 +12,7 @@ export const createCourseSchema = z.object({
       'El slug solo puede contener letras minúsculas, números y guiones'
     ),
   visibility: z.enum(['PUBLIC', 'PRIVATE']),
-  tags: z.array(z.string()).optional().default([]),
+  tags: z.array(z.string()),
 });
 
 export const updateCourseSchema = createCourseSchema.partial();

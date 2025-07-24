@@ -1,5 +1,4 @@
 import { Routes, Route } from 'react-router';
-import { LazyRoute } from './shared/components/lazy-route';
 import { AuthRoute } from './shared/components/auth-route';
 import { ProtectedRoute } from './shared/components/protected-route';
 import { AppLayout } from './shared/components/app-layout';
@@ -9,6 +8,9 @@ import { AuthProvider } from './auth/hooks/auth-context';
 // Lazy load pages
 const LoginPage = lazy(() => import('./auth/pages/login-page'));
 const CoursesPage = lazy(() => import('./courses/pages/courses-page'));
+const CreateCoursePage = lazy(
+  () => import('./courses/pages/create-course-page')
+);
 
 function App() {
   return (
@@ -16,7 +18,7 @@ function App() {
       <Routes>
         {/* Auth routes - only for unauthenticated users */}
         <Route path="/auth" element={<AuthRoute />}>
-          <Route path="login" element={<LazyRoute component={LoginPage} />} />
+          <Route path="login" element={<LoginPage />} />
         </Route>
 
         {/* Public routes - accessible to everyone */}
@@ -25,46 +27,17 @@ function App() {
 
         {/* Protected routes - require authentication (including catch-all) */}
         <Route path="/" element={<ProtectedRoute />}>
-          <Route
-            index
-            element={
-              <AppLayout>
-                <div>Home Page - Solo usuarios autenticados</div>
-              </AppLayout>
-            }
-          />
-          <Route
-            path="dashboard"
-            element={
-              <AppLayout>
-                <div>Dashboard</div>
-              </AppLayout>
-            }
-          />
-          <Route
-            path="cursos"
-            element={
-              <AppLayout>
-                <LazyRoute component={CoursesPage} />
-              </AppLayout>
-            }
-          />
-          <Route
-            path="profile"
-            element={
-              <AppLayout>
-                <div>Profile</div>
-              </AppLayout>
-            }
-          />
-          <Route
-            path="*"
-            element={
-              <AppLayout>
-                <div>404 - Página no encontrada</div>
-              </AppLayout>
-            }
-          />
+          <Route element={<AppLayout />}>
+            <Route
+              index
+              element={<div>Home Page - Solo usuarios autenticados</div>}
+            />
+            <Route path="dashboard" element={<div>Dashboard</div>} />
+            <Route path="cursos" element={<CoursesPage />} />
+            <Route path="cursos/crear" element={<CreateCoursePage />} />
+            <Route path="profile" element={<div>Profile</div>} />
+            <Route path="*" element={<div>404 - Página no encontrada</div>} />
+          </Route>
         </Route>
       </Routes>
     </AuthProvider>
