@@ -55,9 +55,9 @@ export function LoginForm({ onSuccess }: Props) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
       {/* Email Field */}
-      <div>
+      <div className="mb-4">
         <label
           htmlFor="email"
           className="block text-sm font-medium text-gray-700 mb-1"
@@ -78,7 +78,7 @@ export function LoginForm({ onSuccess }: Props) {
       </div>
 
       {/* Password Field */}
-      <div>
+      <div className="mb-4">
         <label
           htmlFor="password"
           className="block text-sm font-medium text-gray-700 mb-1"
@@ -100,7 +100,7 @@ export function LoginForm({ onSuccess }: Props) {
 
       {/* Auth Error Display */}
       {authError && (
-        <div className="bg-red-50 border border-red-200 rounded-md p-3">
+        <div className="bg-red-50 border border-red-200 rounded-md p-3 mb-4">
           <p className="text-red-800 text-sm">{authError}</p>
         </div>
       )}
