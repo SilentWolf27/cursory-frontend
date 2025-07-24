@@ -15,7 +15,7 @@ export function Header() {
           {/* Navigation */}
           <nav className="flex items-center justify-center sm:justify-end">
             <Link
-              to="/courses"
+              to="/cursos"
               className="text-gray-600 hover:text-gray-900 transition-colors font-medium"
             >
               Courses
