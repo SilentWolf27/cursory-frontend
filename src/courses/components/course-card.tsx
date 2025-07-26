@@ -13,7 +13,10 @@ export function CourseCard({ course }: Props) {
   const isPublic = isCoursePublic(course.visibility);
 
   return (
-    <article className="cursor-pointer group relative py-3 px-5 border border-gray-200 rounded-lg min-w-xs min-h-5 bg-white hover:shadow-lg hover:shadow-gray-200/50 hover:border-gray-300 transition-[translate] duration-300 ease-out hover:-translate-y-1">
+    <Link
+      to={`/courses/${course.id}`}
+      className="block cursor-pointer group relative py-3 px-5 border border-gray-200 rounded-lg min-w-xs min-h-5 bg-white hover:shadow-lg hover:shadow-gray-200/50 hover:border-gray-300 transition-[translate] duration-300 ease-out hover:-translate-y-1"
+    >
       <span
         className={clsx(
           'absolute flex items-center gap-1 py-1 px-4 rounded-full text-xs font-semibold border top-3 right-5',
@@ -94,6 +97,6 @@ export function CourseCard({ course }: Props) {
           ))}
         </div>
       )}
-    </article>
+    </Link>
   );
 }
