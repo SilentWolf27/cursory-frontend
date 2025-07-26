@@ -27,7 +27,6 @@ export function CourseForm({
     register,
     handleSubmit,
     formState: { errors, isValid },
-    reset,
   } = useForm<CreateCourseData>({
     resolver: zodResolver(createCourseSchema),
     mode: 'onChange',
@@ -46,12 +45,6 @@ export function CourseForm({
       tags,
     };
     await onSubmit(formData);
-  };
-
-  const handleReset = () => {
-    reset();
-    setTags([]);
-    setTagInput('');
   };
 
   const addTag = () => {
@@ -258,24 +251,15 @@ export function CourseForm({
         <button
           type="submit"
           disabled={!isValid || loading}
-          className="px-4 py-2.5 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+          className="px-4 py-2.5 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm cursor-pointer"
         >
           {loading ? (
             <div className="flex items-center justify-center">
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-              Creating...
             </div>
           ) : (
             submitText
           )}
-        </button>
-
-        <button
-          type="button"
-          onClick={handleReset}
-          className="px-4 py-2.5 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors text-sm"
-        >
-          Reset Form
         </button>
       </div>
     </form>

@@ -6,21 +6,21 @@ import { CourseForm } from '../components/course-form';
 
 function CreateCoursePage() {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (data: CreateCourseData) => {
     try {
-      setLoading(true);
+      setIsSaving(true);
       setError(null);
 
       const course = await courseService.createCourse(data);
 
-      navigate(`/cursos/${course.id}`);
+      navigate(`/cursos/${course.id}/editar`);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create course');
     } finally {
-      setLoading(false);
+      setIsSaving(false);
     }
   };
 
@@ -66,7 +66,7 @@ function CreateCoursePage() {
 
           <CourseForm
             onSubmit={handleSubmit}
-            loading={loading}
+            loading={isSaving}
             submitText="Create Course"
           />
         </div>

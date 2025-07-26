@@ -14,7 +14,7 @@ export function CourseCard({ course }: Props) {
 
   return (
     <Link
-      to={`/courses/${course.id}`}
+      to={`/cursos/${course.id}/editar`}
       className="block cursor-pointer group relative py-3 px-5 border border-gray-200 rounded-lg min-w-xs min-h-5 bg-white hover:shadow-lg hover:shadow-gray-200/50 hover:border-gray-300 transition-[translate] duration-300 ease-out hover:-translate-y-1"
     >
       <span

@@ -1,15 +1,14 @@
 import { z } from 'zod';
 
-// Course validation schemas
 export const createCourseSchema = z.object({
-  title: z.string().min(1, 'El título es requerido'),
-  description: z.string().min(1, 'La descripción es requerida'),
+  title: z.string().min(1, 'Title is required'),
+  description: z.string().min(1, 'Description is required'),
   slug: z
     .string()
-    .min(1, 'El slug es requerido')
+    .min(1, 'Slug is required')
     .regex(
       /^[a-z0-9-]+$/,
-      'El slug solo puede contener letras minúsculas, números y guiones'
+      'Slug can only contain lowercase letters, numbers and hyphens'
     ),
   visibility: z.enum(['PUBLIC', 'PRIVATE']),
   tags: z.array(z.string()),
@@ -17,6 +16,5 @@ export const createCourseSchema = z.object({
 
 export const updateCourseSchema = createCourseSchema.partial();
 
-// Infer types from schemas
 export type CreateCourseData = z.infer<typeof createCourseSchema>;
 export type UpdateCourseData = z.infer<typeof updateCourseSchema>;

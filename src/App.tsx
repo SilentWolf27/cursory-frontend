@@ -11,6 +11,7 @@ const CoursesPage = lazy(() => import('./courses/pages/courses-page'));
 const CreateCoursePage = lazy(
   () => import('./courses/pages/create-course-page')
 );
+const EditCoursePage = lazy(() => import('./courses/pages/edit-course-page'));
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
             <Route path="dashboard" element={<div>Dashboard</div>} />
             <Route path="cursos" element={<CoursesPage />} />
             <Route path="cursos/crear" element={<CreateCoursePage />} />
+            <Route path="cursos/:id/editar" element={<EditCoursePage />} />
             <Route path="profile" element={<div>Profile</div>} />
             <Route path="*" element={<div>404 - Página no encontrada</div>} />
           </Route>
