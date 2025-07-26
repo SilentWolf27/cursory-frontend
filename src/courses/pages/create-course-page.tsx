@@ -119,7 +119,7 @@ function CreateCoursePage() {
                 autoComplete="off"
                 placeholder="e.g., Master Arduino Programming from Zero to Hero"
                 className={clsx(
-                  'w-full px-6 py-4 text-xl border-2 border-gray-200 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200 bg-white/50',
+                  'w-full px-6 py-4 text-base border-2 border-gray-200 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200 bg-white/50',
                   errors.title &&
                     'border-red-300 focus:ring-red-100 focus:border-red-500'
                 )}
@@ -157,7 +157,7 @@ function CreateCoursePage() {
                 autoComplete="off"
                 placeholder="In this course, students will learn the fundamentals of Arduino programming, including digital and analog I/O, sensors, actuators, and building complete projects from scratch..."
                 className={clsx(
-                  'w-full px-6 py-4 border-2 border-gray-200 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200 resize-none bg-white/50',
+                  'w-full px-6 py-4 text-sm border-2 border-gray-200 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200 resize-none bg-white/50',
                   errors.description &&
                     'border-red-300 focus:ring-red-100 focus:border-red-500'
                 )}
@@ -199,7 +199,7 @@ function CreateCoursePage() {
                   autoComplete="off"
                   placeholder="arduino-programming-zero-to-hero"
                   className={clsx(
-                    'flex-1 px-3 py-2.5 border-2 border-gray-200 rounded-r-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200 font-mono bg-white/50',
+                    'flex-1 px-3 py-2.5 text-sm border-2 border-gray-200 rounded-r-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200 font-mono bg-white/50',
                     errors.slug &&
                       'border-red-300 focus:ring-red-100 focus:border-red-500'
                   )}
@@ -333,9 +333,12 @@ function CreateCoursePage() {
                 {...register('tags', {
                   setValueAs: (value: string) => {
                     if (!value) return [];
+
+                    if (Array.isArray(value)) return value;
+
                     return value
                       .split(',')
-                      .map(tag => tag.trim())
+                      .map(tag => tag.trim().toLowerCase())
                       .filter(tag => tag.length > 0);
                   },
                 })}
@@ -344,7 +347,7 @@ function CreateCoursePage() {
                 autoComplete="off"
                 placeholder="arduino, electronics, programming, sensors, IoT"
                 className={clsx(
-                  'w-full px-6 py-4 border-2 border-gray-200 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200 bg-white/50',
+                  'w-full px-6 py-4 text-sm border-2 border-gray-200 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200 bg-white/50',
                   errors.tags &&
                     'border-red-300 focus:ring-red-100 focus:border-red-500'
                 )}
