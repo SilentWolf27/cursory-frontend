@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router';
 import { courseService } from '../services/course-service';
 import { moduleService } from '../services/module-service';
 import { CourseForm } from '../components/course-form';
+import { ModuleCard } from '../components/module-card';
 import { type CreateCourseData } from '../schemas/course-schemas';
 import { type Course } from '../types/course';
 import { LoadingSpinner } from '../../shared/components/loading-spinner';
@@ -13,6 +14,7 @@ import { type Tab as TabType } from '../../shared/components/layout/tab/types';
 import { CourseContent } from '../components/course-content';
 import { Modal } from '../../shared/components/modal/modal';
 import { ModuleForm } from '../components/module-form';
+import type { Module } from '../types/module';
 
 const tabs: TabType[] = [
   { id: 'modules', label: 'Modules' },
@@ -44,6 +46,20 @@ function EditCoursePage() {
       }));
       handleCloseModal();
     } catch (error) {}
+  };
+
+  const handleDeleteModule = async (moduleId: string) => {
+    try {
+      await moduleService.deleteModule(id!, moduleId);
+      setCourse(prevCourse => ({
+        ...prevCourse!,
+        modules: prevCourse!.modules?.filter(m => m.id !== moduleId) || [],
+      }));
+    } catch (error) {}
+  };
+
+  const handleEditModule = (module: Module) => {
+    console.log(module);
   };
 
   const fetchCourse = useCallback(async () => {
@@ -189,7 +205,20 @@ function EditCoursePage() {
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <Tab tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab}>
               {activeTab === 'modules' && (
-                <CourseContent type="modules" onAdd={handleAddContent} />
+                <CourseContent type="modules" onAdd={handleAddContent}>
+                  {course.modules && course.modules.length > 0 && (
+                    <div className="space-y-3">
+                      {course.modules.map(module => (
+                        <ModuleCard
+                          key={module.id}
+                          module={module}
+                          onDelete={handleDeleteModule}
+                          onEdit={handleEditModule}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </CourseContent>
               )}
               {activeTab === 'resources' && (
                 <CourseContent type="resources" onAdd={handleAddContent} />
