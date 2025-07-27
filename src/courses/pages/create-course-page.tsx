@@ -68,6 +68,7 @@ function CreateCoursePage() {
             onSubmit={handleSubmit}
             loading={isSaving}
             submitText="Create Course"
+            isNewCourse={true}
           />
         </div>
       </div>
