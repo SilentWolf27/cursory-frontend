@@ -5,6 +5,7 @@ import {
   createCourseSchema,
   type CreateCourseData,
 } from '../schemas/course-schemas';
+import { courseService } from '../services/course-service';
 import { Modal } from '../../shared/components/modal/modal';
 import { GenerateCourseForm } from './generate-course-form';
 import clsx from 'clsx';
@@ -27,10 +28,13 @@ export function CourseForm({
   const [tags, setTags] = useState<string[]>(initialData.tags || []);
   const [tagInput, setTagInput] = useState('');
   const [isAIModalOpen, setIsAIModalOpen] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const {
     register,
     handleSubmit,
+    setValue,
+    trigger,
     formState: { errors, isValid },
   } = useForm<CreateCourseData>({
     resolver: zodResolver(createCourseSchema),
@@ -75,7 +79,37 @@ export function CourseForm({
 
   const handleCloseAIModal = () => setIsAIModalOpen(false);
 
-  const handleGenerateCourse = async (data: any) => {};
+  const handleGenerateCourse = async (data: any) => {
+    try {
+      setIsGenerating(true);
+
+      const generateData = {
+        description: data.topic,
+        objective: data.expectedOutcome,
+        difficulty: data.difficultyLevel.toLowerCase(),
+      };
+
+      const generatedCourse = await courseService.generateCourse(generateData);
+
+      const generatedTags = generatedCourse.tags.map(tag =>
+        tag.toLocaleLowerCase().trim()
+      );
+      setValue('title', generatedCourse.title);
+      setValue('description', generatedCourse.description);
+      setValue('slug', generatedCourse.slug);
+      setValue('visibility', generatedCourse.visibility);
+      setValue('tags', generatedTags || []);
+
+      setTags(generatedTags || []);
+
+      await trigger();
+
+      handleCloseAIModal();
+    } catch (error) {
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   return (
     <>
@@ -316,9 +350,12 @@ export function CourseForm({
         isOpen={isAIModalOpen}
         onClose={handleCloseAIModal}
         title="Generar Curso con IA"
-        size="lg"
+        size="full"
       >
-        <GenerateCourseForm onSubmit={handleGenerateCourse} loading={false} />
+        <GenerateCourseForm
+          onSubmit={handleGenerateCourse}
+          loading={isGenerating}
+        />
       </Modal>
     </>
   );

@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
 import clsx from 'clsx';
+import { AILoadingState } from '../../shared/components/ai-loading-state';
 
 interface GenerateCourseData {
   topic: string;
@@ -27,12 +27,25 @@ export function GenerateCourseForm({ onSubmit, loading = false }: Props) {
     },
   });
 
+  if (loading) {
+    return (
+      <AILoadingState
+        title="Generando tu curso con IA"
+        description="Nuestra IA está analizando tu información y creando un curso personalizado. Esto puede tomar unos segundos..."
+        size="md"
+      />
+    );
+  }
+
   const handleFormSubmit = async (data: GenerateCourseData) => {
     await onSubmit(data);
   };
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)} className="flex flex-col gap-6">
+    <form
+      onSubmit={handleSubmit(handleFormSubmit)}
+      className="flex flex-col gap-6"
+    >
       {/* Topic Question */}
       <div>
         <label
@@ -42,7 +55,9 @@ export function GenerateCourseForm({ onSubmit, loading = false }: Props) {
           ¿De qué trata tu curso? 🤔
         </label>
         <textarea
-          {...register('topic', { required: 'Cuéntanos sobre qué quieres enseñar' })}
+          {...register('topic', {
+            required: 'Cuéntanos sobre qué quieres enseñar',
+          })}
           id="topic"
           rows={4}
           placeholder="Por ejemplo: Quiero enseñar programación en Python para principiantes, o crear un curso sobre marketing digital..."
@@ -66,7 +81,9 @@ export function GenerateCourseForm({ onSubmit, loading = false }: Props) {
           ¿Qué podrán hacer tus estudiantes al finalizar? 🎯
         </label>
         <textarea
-          {...register('expectedOutcome', { required: 'Describe los resultados esperados' })}
+          {...register('expectedOutcome', {
+            required: 'Describe los resultados esperados',
+          })}
           id="expectedOutcome"
           rows={4}
           placeholder="Por ejemplo: Serán capaces de crear aplicaciones web completas, o podrán diseñar estrategias de marketing efectivas..."
@@ -77,7 +94,9 @@ export function GenerateCourseForm({ onSubmit, loading = false }: Props) {
           )}
         />
         {errors.expectedOutcome && (
-          <p className="text-red-600 text-sm mt-1">{errors.expectedOutcome.message}</p>
+          <p className="text-red-600 text-sm mt-1">
+            {errors.expectedOutcome.message}
+          </p>
         )}
       </div>
 
@@ -90,7 +109,9 @@ export function GenerateCourseForm({ onSubmit, loading = false }: Props) {
           ¿Qué nivel de dificultad tienes en mente? 📊
         </label>
         <select
-          {...register('difficultyLevel', { required: 'Selecciona el nivel de dificultad' })}
+          {...register('difficultyLevel', {
+            required: 'Selecciona el nivel de dificultad',
+          })}
           id="difficultyLevel"
           className={clsx(
             'w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white',
@@ -98,12 +119,20 @@ export function GenerateCourseForm({ onSubmit, loading = false }: Props) {
               'border-red-300 focus:ring-red-500 focus:border-red-500'
           )}
         >
-          <option value="BEGINNER">Principiante - Para personas que están empezando desde cero</option>
-          <option value="INTERMEDIATE">Intermedio - Para personas con algo de experiencia</option>
-          <option value="ADVANCED">Avanzado - Para personas con experiencia sólida</option>
+          <option value="BEGINNER">
+            Principiante - Para personas que están empezando desde cero
+          </option>
+          <option value="INTERMEDIATE">
+            Intermedio - Para personas con algo de experiencia
+          </option>
+          <option value="ADVANCED">
+            Avanzado - Para personas con experiencia sólida
+          </option>
         </select>
         {errors.difficultyLevel && (
-          <p className="text-red-600 text-sm mt-1">{errors.difficultyLevel.message}</p>
+          <p className="text-red-600 text-sm mt-1">
+            {errors.difficultyLevel.message}
+          </p>
         )}
       </div>
 
@@ -117,7 +146,7 @@ export function GenerateCourseForm({ onSubmit, loading = false }: Props) {
           {loading ? (
             <div className="flex items-center justify-center">
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-              Generando...
+              Generando con IA...
             </div>
           ) : (
             'Generar con IA ✨'
@@ -126,4 +155,4 @@ export function GenerateCourseForm({ onSubmit, loading = false }: Props) {
       </div>
     </form>
   );
-} 
+}

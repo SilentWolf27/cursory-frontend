@@ -11,6 +11,12 @@ export interface CoursesResponse {
 
 export interface CourseResponse extends Course {}
 
+export interface GenerateCourseData {
+  description: string;
+  objective: string;
+  difficulty: string;
+}
+
 export const courseService = {
   /**
    * Retrieves all courses for the authenticated user
@@ -41,6 +47,23 @@ export const courseService = {
    */
   async createCourse(data: CreateCourseData): Promise<CourseResponse> {
     const response = await apiClient.post<CourseResponse>('/courses', data);
+    return response.data;
+  },
+
+  /**
+   * Generates course basic information using AI based on provided description, objective, and difficulty
+   * @param data - Generation data (description, objective, difficulty)
+   * @returns Promise that resolves with the generated course
+   * @throws Error if data is invalid or AI generation fails
+   */
+  async generateCourse(data: GenerateCourseData): Promise<CourseResponse> {
+    const response = await apiClient.post<CourseResponse>(
+      '/courses/generate',
+      data,
+      {
+        timeout: 120000, // 2 minutes timeout for AI generation
+      }
+    );
     return response.data;
   },
 
