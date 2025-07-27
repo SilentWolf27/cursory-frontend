@@ -8,10 +8,11 @@ import { LoadingSpinner } from '../../shared/components/loading-spinner';
 import { ErrorState } from '../../shared/components/error-state';
 import { Tab } from '../../shared/components/layout/tab/tab';
 import { useTab } from '../../shared/components/layout/tab/use-tab';
+import { type Tab as TabType } from '../../shared/components/layout/tab/types';
 
-const tabs = [
-  { id: 'modules', label: 'Modules', count: 0 },
-  { id: 'resources', label: 'Resources', count: 0 },
+const tabs: TabType[] = [
+  { id: 'modules', label: 'Modules' },
+  { id: 'resources', label: 'Resources' },
 ];
 
 function EditCoursePage() {
