@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import type { Tab } from './types';
 
 interface UseTabOptions {
