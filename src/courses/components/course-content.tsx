@@ -127,3 +127,4 @@ export function CourseContent({ type, onAdd, children }: Props) {
     </div>
   );
 }
+ 
