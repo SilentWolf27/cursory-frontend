@@ -68,7 +68,7 @@ export function CourseCard({ course }: Props) {
           </>
         )}
       </span>
-      <h2 className="text-lg font-semibold transition-colors duration-100 group-hover:text-blue-600">
+      <h2 className="text-lg font-semibold transition-colors duration-100 group-hover:text-blue-600 max-w-[240px] text-balance">
         {course.title}
       </h2>
 

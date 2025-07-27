@@ -82,7 +82,7 @@ export function Modal({
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       onClick={handleOverlayClick}
     >
-      <div className="absolute inset-0 bg-black bg-opacity-50 transition-opacity" />
+      <div className="absolute inset-0 bg-black/60  transition-opacity" />
 
       <div
         ref={modalRef}

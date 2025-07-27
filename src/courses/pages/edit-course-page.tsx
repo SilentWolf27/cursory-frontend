@@ -10,6 +10,8 @@ import { Tab } from '../../shared/components/layout/tab/tab';
 import { useTab } from '../../shared/components/layout/tab/use-tab';
 import { type Tab as TabType } from '../../shared/components/layout/tab/types';
 import { CourseContent } from '../components/course-content';
+import { Modal } from '../../shared/components/modal/modal';
+import { ModuleForm } from '../components/module-form';
 
 const tabs: TabType[] = [
   { id: 'modules', label: 'Modules' },
@@ -24,17 +26,18 @@ function EditCoursePage() {
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { activeTab, setActiveTab } = useTab({ tabs, initialTab: 'modules' });
 
-  const handleAddModule = () => {
-    // TODO: Implement add module functionality
-    console.log('Add module clicked');
-  };
+  const handleAddContent = () => setIsModalOpen(true);
 
-  const handleAddResource = () => {
-    // TODO: Implement add resource functionality
-    console.log('Add resource clicked');
+  const handleCloseModal = () => setIsModalOpen(false);
+
+  const handleCreateModule = async (data: any) => {
+    // TODO: Implement module creation
+    console.log('Creating module:', data);
+    setIsModalOpen(false);
   };
 
   const fetchCourse = useCallback(async () => {
@@ -180,15 +183,35 @@ function EditCoursePage() {
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <Tab tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab}>
               {activeTab === 'modules' && (
-                <CourseContent type="modules" onAdd={handleAddModule} />
+                <CourseContent type="modules" onAdd={handleAddContent} />
               )}
               {activeTab === 'resources' && (
-                <CourseContent type="resources" onAdd={handleAddResource} />
+                <CourseContent type="resources" onAdd={handleAddContent} />
               )}
             </Tab>
           </div>
         </div>
       </div>
+
+      {/* Add Module/Resource Modal */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        title={`Add ${activeTab === 'modules' ? 'Module' : 'Resource'}`}
+        size="lg"
+      >
+        {activeTab === 'modules' ? (
+          <ModuleForm onSubmit={handleCreateModule} moduleCount={0} />
+        ) : (
+          <div className="space-y-6">
+            <p className="text-gray-600">
+              Add a helpful resource for your students.
+            </p>
+
+            <div className="bg-gray-50 p-4 rounded-lg"></div>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 }
