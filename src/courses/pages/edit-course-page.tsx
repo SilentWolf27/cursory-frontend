@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { courseService } from '../services/course-service';
+import { moduleService } from '../services/module-service';
 import { CourseForm } from '../components/course-form';
 import { type CreateCourseData } from '../schemas/course-schemas';
 import { type Course } from '../types/course';
@@ -35,9 +36,14 @@ function EditCoursePage() {
   const handleCloseModal = () => setIsModalOpen(false);
 
   const handleCreateModule = async (data: any) => {
-    // TODO: Implement module creation
-    console.log('Creating module:', data);
-    setIsModalOpen(false);
+    try {
+      const newModule = await moduleService.createModule(id!, data);
+      setCourse(prevCourse => ({
+        ...prevCourse!,
+        modules: [...(prevCourse!.modules || []), newModule],
+      }));
+      handleCloseModal();
+    } catch (error) {}
   };
 
   const fetchCourse = useCallback(async () => {
@@ -201,7 +207,10 @@ function EditCoursePage() {
         size="lg"
       >
         {activeTab === 'modules' ? (
-          <ModuleForm onSubmit={handleCreateModule} moduleCount={0} />
+          <ModuleForm
+            onSubmit={handleCreateModule}
+            moduleCount={course.modules?.length || 0}
+          />
         ) : (
           <div className="space-y-6">
             <p className="text-gray-600">

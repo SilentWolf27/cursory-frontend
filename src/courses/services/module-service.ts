@@ -9,28 +9,11 @@ export interface ModuleResponse extends Module {}
 
 export const moduleService = {
   /**
-   * Retrieves a specific module within a course
-   * @param courseId - ID of the course containing the module
-   * @param moduleId - Unique module ID
-   * @returns Promise that resolves with the module data
-   * @throws Error if course or module doesn't exist, or user lacks access
-   */
-  async getModuleById(
-    courseId: string,
-    moduleId: string
-  ): Promise<ModuleResponse> {
-    const response = await apiClient.get<ModuleResponse>(
-      `/courses/${courseId}/modules/${moduleId}`
-    );
-    return response.data;
-  },
-
-  /**
-   * Creates a new module within a course, validating ownership permissions
-   * @param courseId - ID of the course where to create the module
-   * @param data - Module data (title, description, order, objectives)
+   * Creates a new module within a specific course
+   * @param courseId - Unique course ID
+   * @param data - Module data to create (title, description, order, objectives)
    * @returns Promise that resolves with the created module
-   * @throws Error if user is not the course owner or there's an order conflict
+   * @throws Error if course doesn't exist, user lacks access, or data is invalid
    */
   async createModule(
     courseId: string,
@@ -44,12 +27,29 @@ export const moduleService = {
   },
 
   /**
-   * Updates an existing module, reordering if necessary
-   * @param courseId - ID of the course containing the module
-   * @param moduleId - ID of the module to update
+   * Retrieves a specific module within a course
+   * @param courseId - Unique course ID
+   * @param moduleId - Unique module ID
+   * @returns Promise that resolves with the module
+   * @throws Error if course or module doesn't exist
+   */
+  async getModuleById(
+    courseId: string,
+    moduleId: string
+  ): Promise<ModuleResponse> {
+    const response = await apiClient.get<ModuleResponse>(
+      `/courses/${courseId}/modules/${moduleId}`
+    );
+    return response.data;
+  },
+
+  /**
+   * Updates an existing module within a course
+   * @param courseId - Unique course ID
+   * @param moduleId - Unique module ID
    * @param data - Partial data to update
    * @returns Promise that resolves with the updated module
-   * @throws Error if user is not the owner or there's an order conflict
+   * @throws Error if user is not the course owner or module doesn't exist
    */
   async updateModule(
     courseId: string,
@@ -64,10 +64,10 @@ export const moduleService = {
   },
 
   /**
-   * Permanently deletes a module from the course
-   * @param courseId - ID of the course containing the module
-   * @param moduleId - ID of the module to delete
-   * @throws Error if user is not the course owner
+   * Permanently deletes a module from a course
+   * @param courseId - Unique course ID
+   * @param moduleId - Unique module ID
+   * @throws Error if user is not the course owner or module doesn't exist
    */
   async deleteModule(courseId: string, moduleId: string): Promise<void> {
     await apiClient.delete(`/courses/${courseId}/modules/${moduleId}`);

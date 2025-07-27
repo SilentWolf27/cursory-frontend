@@ -9,11 +9,11 @@ export interface ResourceResponse extends Resource {}
 
 export const resourceService = {
   /**
-   * Creates a new resource within a course, validating URL and permissions
-   * @param courseId - ID of the course where to create the resource
-   * @param data - Resource data (title, description, type, URL)
+   * Creates a new resource within a specific course
+   * @param courseId - Unique course ID
+   * @param data - Resource data to create (title, description, type, url)
    * @returns Promise that resolves with the created resource
-   * @throws Error if user is not the course owner or URL is invalid
+   * @throws Error if course doesn't exist, user lacks access, or data is invalid
    */
   async createResource(
     courseId: string,
@@ -27,12 +27,12 @@ export const resourceService = {
   },
 
   /**
-   * Updates an existing resource, validating URL if modified
-   * @param courseId - ID of the course containing the resource
-   * @param resourceId - ID of the resource to update
+   * Updates an existing resource within a course
+   * @param courseId - Unique course ID
+   * @param resourceId - Unique resource ID
    * @param data - Partial data to update
    * @returns Promise that resolves with the updated resource
-   * @throws Error if user is not the owner or URL is invalid
+   * @throws Error if user is not the course owner or resource doesn't exist
    */
   async updateResource(
     courseId: string,
@@ -47,10 +47,10 @@ export const resourceService = {
   },
 
   /**
-   * Permanently deletes a resource from the course
-   * @param courseId - ID of the course containing the resource
-   * @param resourceId - ID of the resource to delete
-   * @throws Error if user is not the course owner
+   * Permanently deletes a resource from a course
+   * @param courseId - Unique course ID
+   * @param resourceId - Unique resource ID
+   * @throws Error if user is not the course owner or resource doesn't exist
    */
   async deleteResource(courseId: string, resourceId: string): Promise<void> {
     await apiClient.delete(`/courses/${courseId}/resources/${resourceId}`);
