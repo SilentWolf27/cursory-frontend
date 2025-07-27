@@ -9,6 +9,7 @@ import { ErrorState } from '../../shared/components/error-state';
 import { Tab } from '../../shared/components/layout/tab/tab';
 import { useTab } from '../../shared/components/layout/tab/use-tab';
 import { type Tab as TabType } from '../../shared/components/layout/tab/types';
+import { CourseContent } from '../components/course-content';
 
 const tabs: TabType[] = [
   { id: 'modules', label: 'Modules' },
@@ -25,6 +26,16 @@ function EditCoursePage() {
   const [error, setError] = useState<string | null>(null);
 
   const { activeTab, setActiveTab } = useTab({ tabs, initialTab: 'modules' });
+
+  const handleAddModule = () => {
+    // TODO: Implement add module functionality
+    console.log('Add module clicked');
+  };
+
+  const handleAddResource = () => {
+    // TODO: Implement add resource functionality
+    console.log('Add resource clicked');
+  };
 
   const fetchCourse = useCallback(async () => {
     if (!id) return;
@@ -165,12 +176,17 @@ function EditCoursePage() {
             />
           </div>
 
-          <Tab tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab}>
-            <div>
-              {activeTab === 'modules' && <div>Modules</div>}
-              {activeTab === 'resources' && <div>Resources</div>}
-            </div>
-          </Tab>
+          {/* Course Content Section */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <Tab tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab}>
+              {activeTab === 'modules' && (
+                <CourseContent type="modules" onAdd={handleAddModule} />
+              )}
+              {activeTab === 'resources' && (
+                <CourseContent type="resources" onAdd={handleAddResource} />
+              )}
+            </Tab>
+          </div>
         </div>
       </div>
     </div>
