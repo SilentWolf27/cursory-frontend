@@ -68,7 +68,7 @@ export function ModuleForm({
   };
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="flex flex-col gap-6">
       {/* Module Title */}
       <div>
         <label
@@ -164,7 +164,7 @@ export function ModuleForm({
 
         {/* Objectives Display */}
         {objectives.length > 0 && (
-          <div className="space-y-2">
+          <div className="flex flex-col gap-2">
             {objectives.map((objective, index) => (
               <div
                 key={index}

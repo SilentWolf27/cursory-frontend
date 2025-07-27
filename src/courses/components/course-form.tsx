@@ -67,7 +67,7 @@ export function CourseForm({
   };
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="flex flex-col gap-6">
       {/* Course Title */}
       <div>
         <label

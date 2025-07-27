@@ -2,8 +2,11 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { courseService } from '../services/course-service';
 import { moduleService } from '../services/module-service';
+import { resourceService } from '../services/resource-service';
 import { CourseForm } from '../components/course-form';
 import { ModuleCard } from '../components/module-card';
+import { ResourceCard } from '../components/resource-card';
+import { ResourceForm } from '../components/resource-form';
 import { type CreateCourseData } from '../schemas/course-schemas';
 import { type Course } from '../types/course';
 import { LoadingSpinner } from '../../shared/components/loading-spinner';
@@ -60,6 +63,32 @@ function EditCoursePage() {
 
   const handleEditModule = (module: Module) => {
     console.log(module);
+  };
+
+  const handleCreateResource = async (data: any) => {
+    try {
+      const newResource = await resourceService.createResource(id!, data);
+      setCourse(prevCourse => ({
+        ...prevCourse!,
+        resources: [...(prevCourse!.resources || []), newResource],
+      }));
+      handleCloseModal();
+    } catch (error) {}
+  };
+
+  const handleDeleteResource = async (resourceId: string) => {
+    try {
+      await resourceService.deleteResource(id!, resourceId);
+      setCourse(prevCourse => ({
+        ...prevCourse!,
+        resources:
+          prevCourse!.resources?.filter(r => r.id !== resourceId) || [],
+      }));
+    } catch (error) {}
+  };
+
+  const handleEditResource = (resource: any) => {
+    console.log(resource);
   };
 
   const fetchCourse = useCallback(async () => {
@@ -207,7 +236,7 @@ function EditCoursePage() {
               {activeTab === 'modules' && (
                 <CourseContent type="modules" onAdd={handleAddContent}>
                   {course.modules && course.modules.length > 0 && (
-                    <div className="space-y-3">
+                    <div className="flex flex-col gap-3">
                       {course.modules.map(module => (
                         <ModuleCard
                           key={module.id}
@@ -221,7 +250,20 @@ function EditCoursePage() {
                 </CourseContent>
               )}
               {activeTab === 'resources' && (
-                <CourseContent type="resources" onAdd={handleAddContent} />
+                <CourseContent type="resources" onAdd={handleAddContent}>
+                  {course.resources && course.resources.length > 0 && (
+                    <div className="flex flex-col gap-3">
+                      {course.resources.map(resource => (
+                        <ResourceCard
+                          key={resource.id}
+                          resource={resource}
+                          onDelete={handleDeleteResource}
+                          onEdit={handleEditResource}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </CourseContent>
               )}
             </Tab>
           </div>
@@ -241,13 +283,10 @@ function EditCoursePage() {
             moduleCount={course.modules?.length || 0}
           />
         ) : (
-          <div className="space-y-6">
-            <p className="text-gray-600">
-              Add a helpful resource for your students.
-            </p>
-
-            <div className="bg-gray-50 p-4 rounded-lg"></div>
-          </div>
+          <ResourceForm
+            onSubmit={handleCreateResource}
+            submitText="Add Resource"
+          />
         )}
       </Modal>
     </div>
