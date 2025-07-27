@@ -72,7 +72,7 @@ export function CourseCard({ course }: Props) {
         {course.title}
       </h2>
 
-      <p className="text-md text-gray-500 mt-4 transition-colors duration-100 group-hover:text-gray-600">
+      <p className="text-md text-gray-500 mt-4 transition-colors duration-100 group-hover:text-gray-600 line-clamp-3">
         {course.description}
       </p>
 
