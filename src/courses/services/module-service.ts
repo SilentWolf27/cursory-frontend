@@ -5,6 +5,28 @@ import type {
   UpdateModuleData,
 } from '../schemas/module-schemas';
 
+export interface GenerateModulesData {
+  suggestedTopics: string;
+  numberOfModules: number;
+  approach: string;
+}
+
+export interface GeneratedModule {
+  id?: string;
+  title: string;
+  description: string;
+  objectives?: string[];
+  order: number;
+}
+
+export interface GenerateModulesResponse {
+  modules: GeneratedModule[];
+}
+
+export interface BulkCreateModulesData {
+  modules: CreateModuleData[];
+}
+
 export interface ModuleResponse extends Module {}
 
 export const moduleService = {
@@ -21,6 +43,45 @@ export const moduleService = {
   ): Promise<ModuleResponse> {
     const response = await apiClient.post<ModuleResponse>(
       `/courses/${courseId}/modules`,
+      data
+    );
+    return response.data;
+  },
+
+  /**
+   * Generates modules for a course using AI
+   * @param courseId - Unique course ID
+   * @param data - Generation parameters (suggestedTopics, numberOfModules, approach)
+   * @returns Promise that resolves with the generated modules
+   * @throws Error if course doesn't exist, user lacks access, or data is invalid
+   */
+  async generateModules(
+    courseId: string,
+    data: GenerateModulesData
+  ): Promise<GenerateModulesResponse> {
+    const response = await apiClient.post<GenerateModulesResponse>(
+      `/courses/${courseId}/modules/generate`,
+      data,
+      {
+        timeout: 120000, // 2 minutes timeout for AI generation
+      }
+    );
+    return response.data;
+  },
+
+  /**
+   * Creates multiple modules for a course in a single request
+   * @param courseId - Unique course ID
+   * @param data - Array of modules to create
+   * @returns Promise that resolves with the created modules
+   * @throws Error if course doesn't exist, user lacks access, or data is invalid
+   */
+  async createModulesBulk(
+    courseId: string,
+    data: BulkCreateModulesData
+  ): Promise<{ modules: ModuleResponse[] }> {
+    const response = await apiClient.post<{ modules: ModuleResponse[] }>(
+      `/courses/${courseId}/modules/bulk`,
       data
     );
     return response.data;

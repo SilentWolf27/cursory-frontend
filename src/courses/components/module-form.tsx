@@ -68,7 +68,10 @@ export function ModuleForm({
   };
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)} className="flex flex-col gap-6">
+    <form
+      onSubmit={handleSubmit(handleFormSubmit)}
+      className="flex flex-col gap-6"
+    >
       {/* Module Title */}
       <div>
         <label
@@ -218,4 +221,3 @@ export function ModuleForm({
     </form>
   );
 }
- 

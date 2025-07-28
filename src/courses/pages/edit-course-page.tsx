@@ -17,6 +17,10 @@ import { type Tab as TabType } from '../../shared/components/layout/tab/types';
 import { CourseContent } from '../components/course-content';
 import { Modal } from '../../shared/components/modal/modal';
 import { ModuleForm } from '../components/module-form';
+import { useAIModuleGeneration } from '../hooks/use-ai-module-generation';
+import { GenerateModulesForm } from '../components/generate-modules-form';
+import { GeneratedModulesList } from '../components/generated-modules-list';
+import { AILoadingState } from '../../shared/components/ai-loading-state';
 import type { Module } from '../types/module';
 
 const tabs: TabType[] = [
@@ -35,10 +39,39 @@ function EditCoursePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { activeTab, setActiveTab } = useTab({ tabs, initialTab: 'modules' });
+  const {
+    isModalOpen: isAIModalOpen,
+    isGenerating,
+    isCreating,
+    showReviewList,
+    generatedModules,
+    openModal: openAIModal,
+    closeModal: closeAIModal,
+    generateModules,
+    createModules,
+  } = useAIModuleGeneration();
 
   const handleAddContent = () => setIsModalOpen(true);
 
   const handleCloseModal = () => setIsModalOpen(false);
+
+  const handleGenerateModules = async (data: any) => {
+    try {
+      await generateModules(id!, data);
+    } catch (error) {}
+  };
+
+  const handleCreateModules = async (modules: any[]) => {
+    try {
+      const response = await createModules(id!, modules);
+
+      // Update course state with new modules
+      setCourse(prevCourse => ({
+        ...prevCourse!,
+        modules: [...(prevCourse!.modules || []), ...response.modules],
+      }));
+    } catch (error) {}
+  };
 
   const handleCreateModule = async (data: any) => {
     try {
@@ -234,7 +267,11 @@ function EditCoursePage() {
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <Tab tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab}>
               {activeTab === 'modules' && (
-                <CourseContent type="modules" onAdd={handleAddContent}>
+                <CourseContent
+                  type="modules"
+                  onAdd={handleAddContent}
+                  onGenerateWithAI={() => openAIModal()}
+                >
                   {course.modules && course.modules.length > 0 && (
                     <div className="flex flex-col gap-3">
                       {course.modules.map(module => (
@@ -286,6 +323,34 @@ function EditCoursePage() {
           <ResourceForm
             onSubmit={handleCreateResource}
             submitText="Add Resource"
+          />
+        )}
+      </Modal>
+
+      {/* AI Module Generation Modal */}
+      <Modal
+        isOpen={isAIModalOpen}
+        onClose={closeAIModal}
+        title={showReviewList ? "Revisar Módulos Generados" : "Generar Módulos con IA"}
+        size="xl"
+      >
+        {isGenerating ? (
+          <AILoadingState
+            title="Generando módulos con IA"
+            description="Estamos creando módulos personalizados basados en tus especificaciones. Esto puede tomar unos momentos."
+            size="lg"
+          />
+        ) : showReviewList ? (
+          <GeneratedModulesList
+            modules={generatedModules}
+            onConfirm={handleCreateModules}
+            onCancel={closeAIModal}
+            isCreating={isCreating}
+          />
+        ) : (
+          <GenerateModulesForm
+            onSubmit={handleGenerateModules}
+            loading={isGenerating}
           />
         )}
       </Modal>

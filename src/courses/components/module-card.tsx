@@ -36,11 +36,13 @@ export function ModuleCard({ module, onDelete, onEdit }: Props) {
         </div>
 
         {/* Title and description */}
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 max-w-xs">
           <h3 className="font-semibold text-gray-900 truncate">
             {module.title}
           </h3>
-          <p className="text-sm text-gray-600 truncate">{module.description}</p>
+          <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed">
+            {module.description}
+          </p>
         </div>
       </div>
 
