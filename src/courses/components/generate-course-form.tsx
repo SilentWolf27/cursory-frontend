@@ -1,29 +1,29 @@
 import { useForm } from 'react-hook-form';
 import clsx from 'clsx';
 import { AILoadingState } from '../../shared/components/ai-loading-state';
-
-interface GenerateCourseData {
-  topic: string;
-  expectedOutcome: string;
-  difficultyLevel: string;
-}
+import type { GenerateCourseData } from '../services/course-service';
 
 interface Props {
   onSubmit: (data: GenerateCourseData) => Promise<void>;
   loading?: boolean;
+  initialData?: GenerateCourseData | undefined;
 }
 
-export function GenerateCourseForm({ onSubmit, loading = false }: Props) {
+export function GenerateCourseForm({ 
+  onSubmit, 
+  loading = false,
+  initialData
+}: Props) {
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
   } = useForm<GenerateCourseData>({
     mode: 'onChange',
-    defaultValues: {
-      topic: '',
-      expectedOutcome: '',
-      difficultyLevel: 'BEGINNER',
+    defaultValues: initialData || {
+      description: '',
+      objective: '',
+      difficulty: 'beginner',
     },
   });
 
@@ -49,53 +49,53 @@ export function GenerateCourseForm({ onSubmit, loading = false }: Props) {
       {/* Topic Question */}
       <div>
         <label
-          htmlFor="topic"
+          htmlFor="description"
           className="block text-lg font-medium text-gray-900 mb-3"
         >
           ¿De qué trata tu curso? 🤔
         </label>
         <textarea
-          {...register('topic', {
+          {...register('description', {
             required: 'Cuéntanos sobre qué quieres enseñar',
           })}
-          id="topic"
+          id="description"
           rows={4}
           placeholder="Por ejemplo: Quiero enseñar programación en Python para principiantes, o crear un curso sobre marketing digital..."
           className={clsx(
             'w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none',
-            errors.topic &&
+            errors.description &&
               'border-red-300 focus:ring-red-500 focus:border-red-500'
           )}
         />
-        {errors.topic && (
-          <p className="text-red-600 text-sm mt-1">{errors.topic.message}</p>
+        {errors.description && (
+          <p className="text-red-600 text-sm mt-1">{errors.description.message}</p>
         )}
       </div>
 
       {/* Expected Outcome Question */}
       <div>
         <label
-          htmlFor="expectedOutcome"
+          htmlFor="objective"
           className="block text-lg font-medium text-gray-900 mb-3"
         >
           ¿Qué podrán hacer tus estudiantes al finalizar? 🎯
         </label>
         <textarea
-          {...register('expectedOutcome', {
+          {...register('objective', {
             required: 'Describe los resultados esperados',
           })}
-          id="expectedOutcome"
+          id="objective"
           rows={4}
           placeholder="Por ejemplo: Serán capaces de crear aplicaciones web completas, o podrán diseñar estrategias de marketing efectivas..."
           className={clsx(
             'w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none',
-            errors.expectedOutcome &&
+            errors.objective &&
               'border-red-300 focus:ring-red-500 focus:border-red-500'
           )}
         />
-        {errors.expectedOutcome && (
+        {errors.objective && (
           <p className="text-red-600 text-sm mt-1">
-            {errors.expectedOutcome.message}
+            {errors.objective.message}
           </p>
         )}
       </div>
@@ -103,35 +103,35 @@ export function GenerateCourseForm({ onSubmit, loading = false }: Props) {
       {/* Difficulty Level Question */}
       <div>
         <label
-          htmlFor="difficultyLevel"
+          htmlFor="difficulty"
           className="block text-lg font-medium text-gray-900 mb-3"
         >
           ¿Qué nivel de dificultad tienes en mente? 📊
         </label>
         <select
-          {...register('difficultyLevel', {
+          {...register('difficulty', {
             required: 'Selecciona el nivel de dificultad',
           })}
-          id="difficultyLevel"
+          id="difficulty"
           className={clsx(
             'w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white',
-            errors.difficultyLevel &&
+            errors.difficulty &&
               'border-red-300 focus:ring-red-500 focus:border-red-500'
           )}
         >
-          <option value="BEGINNER">
+          <option value="beginner">
             Principiante - Para personas que están empezando desde cero
           </option>
-          <option value="INTERMEDIATE">
+          <option value="intermediate">
             Intermedio - Para personas con algo de experiencia
           </option>
-          <option value="ADVANCED">
+          <option value="advanced">
             Avanzado - Para personas con experiencia sólida
           </option>
         </select>
-        {errors.difficultyLevel && (
+        {errors.difficulty && (
           <p className="text-red-600 text-sm mt-1">
-            {errors.difficultyLevel.message}
+            {errors.difficulty.message}
           </p>
         )}
       </div>
